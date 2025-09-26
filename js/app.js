@@ -1,5 +1,4 @@
 /* app.js */
-/* app.js */
 import { LocalDB } from "./storage/local.js";
 import { exportPDF } from "./../js/export-pdf.js";
 import { PROGRAMS } from "./data/programs.js";
@@ -38,6 +37,11 @@ const els = {
   saveBtn: document.getElementById("saveBtn"),
   exportBtn: document.getElementById("exportBtn"),
   exportBtnTop: document.getElementById("exportBtnTop"),
+
+  //toggles
+    toggleTextbooks: document.getElementById("toggleTextbooks"),
+    toggleAssignments: document.getElementById("toggleAssignments"),
+    toggleHours: document.getElementById("toggleHours"),
 
   // preview
   pvTitle: document.getElementById("pvTitle"),
@@ -92,6 +96,7 @@ document.getElementById("addPolicyBtn").addEventListener("click", () => {
   renderPoliciesPreview();
 });
 
+
 /* ---------- Functions ---------- */
 
 // Single, definitive startNew (no duplicates!)
@@ -118,9 +123,15 @@ function startNew() {
     canvas: { url: "", notes: "" },
     policies: [],
 
+    // NEW: defaults for section toggles
+    includeTextbooks: true,
+    includeAssignments: true,
+    includeHours: true,
+
     updatedAt: now(),
   };
 }
+
 
 function initOptions() {
   // Make instructor multi-select
@@ -150,6 +161,16 @@ function initOptions() {
     updateFromInputs();
     render();
   });
+  [els.toggleTextbooks, els.toggleAssignments, els.toggleHours].forEach(cb => {
+  if (!cb) return;
+  cb.addEventListener("change", () => {
+    doc.includeTextbooks = !!els.toggleTextbooks?.checked;
+    doc.includeAssignments = !!els.toggleAssignments?.checked;
+    doc.includeHours = !!els.toggleHours?.checked;
+    render();
+  });
+});
+
 }
 
 function fillSelect(select, options, includeEmpty = false) {
@@ -238,6 +259,19 @@ function render() {
   // Campus Requirements — allow HTML (links, formatting)
   els.pvCampus.classList.toggle("placeholder", !doc.campusRequirements);
   els.pvCampus.innerHTML = doc.campusRequirements || "Select from list…";
+
+  if (els.toggleTextbooks) els.toggleTextbooks.checked = !!doc.includeTextbooks;
+if (els.toggleAssignments) els.toggleAssignments.checked = !!doc.includeAssignments;
+if (els.toggleHours) els.toggleHours.checked = !!doc.includeHours;
+
+const secTextbooks = els.pvTextbooks?.closest(".section");
+const secAssign     = els.pvAssign?.closest(".section");
+const secHours      = els.pvHours?.closest(".section");
+
+if (secTextbooks) secTextbooks.style.display = doc.includeTextbooks ? "" : "none";
+if (secAssign)    secAssign.style.display    = doc.includeAssignments ? "" : "none";
+if (secHours)     secHours.style.display     = doc.includeHours ? "" : "none";
+
 }
 
 /* ----- Policies: editable list with reorder ----- */
@@ -317,3 +351,4 @@ function escapeHtml(str = "") {
 function newlineToBr(str = "") {
   return str.replace(/\n/g, "<br>");
 }
+
