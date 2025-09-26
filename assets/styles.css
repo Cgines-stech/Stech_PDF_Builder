@@ -149,3 +149,73 @@ label:has(#year),          /* if still present */
 label:has(#title) {        /* if you’re hiding Course Title too */
   display: none !important;
 }
+
+/* ===== Letter-sized preview & consistent margins ===== */
+:root {
+  --page-w: 8.5in;
+  --page-h: 11in;
+  --page-margin: 0.5in; /* same as print margins below */
+}
+
+/* Simulate Letter page on screen */
+.preview {
+  width: calc(var(--page-w) - 2 * var(--page-margin));
+  min-height: calc(var(--page-h) - 2 * var(--page-margin));
+  margin: 0 auto;             /* center on screen */
+  padding: var(--page-margin); /* match print margins */
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0,0,0,.05);
+}
+
+/* Actual print setup */
+@media print {
+  @page {
+    size: 8.5in 11in;          /* Letter */
+    margin: var(--page-margin);
+  }
+  /* Remove preview chrome when printing */
+  .panel, .container, .grid { border: 0; box-shadow: none; }
+  .preview { border: 0; box-shadow: none; padding: 0; }
+}
+
+/* ===== Force page breaks for specific sections ===== */
+/* Start Assignments on a new page */
+.section:has(#pvAssign) {
+  break-before: page;          /* modern property */
+  page-break-before: always;   /* legacy fallback */
+}
+
+/* Start Classroom Hours on its own new page (after assignments) */
+.section:has(#pvHours) {
+  break-before: page;
+  page-break-before: always;
+}
+
+/* Keep the Assignments items together nicely across pages */
+#pvAssign { column-count: 2; column-gap: 30px; }
+#pvAssign > * { break-inside: avoid; page-break-inside: avoid; }
+#pvAssign::after {
+  content: "Subject to change. Please consult your Canvas course for the most current instructions and updates.";
+  display: block;
+  font-style: italic;
+  font-size: 12px;
+  color: #333;
+  border-top: 1px solid #ccc;
+  margin-top: 8px;
+  padding-top: 6px;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+/* ===== Screen-only page break markers (visual aid) ===== */
+@media screen {
+  .section:has(#pvAssign)::before,
+  .section:has(#pvHours)::before {
+    content: "— Page break —";
+    display: block;
+    text-align: center;
+    font-size: 12px;
+    color: #6b7280;
+    margin: 12px 0;
+  }
+}
