@@ -6,7 +6,7 @@ export const COURSE_CONTENT = {
     description: "...",
     outline: "...",
     textbooks: "...",
-    assignments: "...",
+    assignments: "Item 1",
     hours: "M/W 10:00–11:15 AM (3 credits)",
     campusRequirements: `... <a href="https://stech.edu/..." target="_blank">...</a>`
   },

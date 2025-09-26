@@ -7,17 +7,18 @@ import { INSTRUCTORS } from "./data/instructors.js";
 import { CANVAS_OPTIONS } from "./data/canvas_options.js";
 import { POLICY_PRESETS } from "./data/policy_presets.js";
 import { CAMPUS_REQUIREMENTS } from "./data/campus_requirements.js";
-import { COURSE_CONTENT } from "./data/course_content.js"; // <-- make sure this file exists
+import { COURSE_CONTENT } from "./data/course_content.js"; // <-- ensure this exists
 
 const uid = () => Math.random().toString(36).slice(2, 10);
 const now = () => Date.now();
 
+/* ---------- Element lookups ---------- */
 const els = {
   // selectors
   program: document.getElementById("program"),
   course: document.getElementById("course"),
 
-  // (we're not using year/title anymore but they may still exist in HTML)
+  // (exist in HTML but not used logically)
   year: document.getElementById("year"),
   title: document.getElementById("title"),
 
@@ -33,19 +34,17 @@ const els = {
   campusReqSelect: document.getElementById("campusReqSelect"),
 
   // buttons
-newBtn: document.getElementById("newBtn"),
-saveBtn: document.getElementById("saveBtn"),
-exportBtn: document.getElementById("exportBtn"),
-exportBtnTop: document.getElementById("exportBtnTop"),
-printBtn: document.getElementById("printBtn"),       // <-- add these
-printBtnTop: document.getElementById("printBtnTop"), // <-- add these
+  newBtn: document.getElementById("newBtn"),
+  saveBtn: document.getElementById("saveBtn"),
+  exportBtn: document.getElementById("exportBtn"),
+  exportBtnTop: document.getElementById("exportBtnTop"),
+  printBtn: document.getElementById("printBtn"),
+  printBtnTop: document.getElementById("printBtnTop"),
 
-
-
-  //toggles
-    toggleTextbooks: document.getElementById("toggleTextbooks"),
-    toggleAssignments: document.getElementById("toggleAssignments"),
-    toggleHours: document.getElementById("toggleHours"),
+  // toggles
+  toggleTextbooks: document.getElementById("toggleTextbooks"),
+  toggleAssignments: document.getElementById("toggleAssignments"),
+  toggleHours: document.getElementById("toggleHours"),
 
   // preview
   pvTitle: document.getElementById("pvTitle"),
@@ -66,23 +65,22 @@ initOptions();
 render();
 
 /* ---------- Event wiring ---------- */
-els.newBtn.addEventListener("click", () => {
+els.newBtn?.addEventListener("click", () => {
   doc = startNew();
   render();
 });
 
-els.saveBtn.addEventListener("click", async () => {
+els.saveBtn?.addEventListener("click", async () => {
   await LocalDB.upsert(doc);
   alert("Saved.");
 });
 
 // Export: filename should be just the course CODE (e.g., "ENG 1010.pdf")
-// Export: filename should be just the course CODE (e.g., "ENG 1010.pdf")
 [els.exportBtn, els.exportBtnTop].forEach(b =>
   b?.addEventListener("click", () => exportPDF(doc.course))
 );
 
-// Print buttons -> open browser print dialog (honors page breaks)
+// Print buttons -> open browser print dialog (honors page breaks in CSS)
 [els.printBtn, els.printBtnTop].forEach(b =>
   b?.addEventListener("click", () => window.print())
 );
@@ -90,12 +88,12 @@ els.saveBtn.addEventListener("click", async () => {
 // Changes → update & render
 ["program", "course", "instructorSelect", "canvasSelect", "campusReqSelect"].forEach((id) => {
   const el = els[id];
-  if (el) el.addEventListener("change", () => { updateFromInputs(); render(); });
+  el?.addEventListener("change", () => { updateFromInputs(); render(); });
 });
 
 // Policies add
-document.getElementById("addPolicyBtn").addEventListener("click", () => {
-  const id = els.policyPicker.value;
+document.getElementById("addPolicyBtn")?.addEventListener("click", () => {
+  const id = els.policyPicker?.value;
   if (!id) return; // no selection
 
   const preset = POLICY_PRESETS.find(p => p.id === id);
@@ -110,11 +108,9 @@ document.getElementById("addPolicyBtn").addEventListener("click", () => {
   renderPoliciesPreview();
 });
 
-
-
 /* ---------- Functions ---------- */
 
-// Single, definitive startNew (no duplicates!)
+// Single, definitive startNew
 function startNew() {
   const firstProgram = PROGRAMS[0] || "";
   const firstCourse = (COURSES[firstProgram] || [])[0] || "";
@@ -138,7 +134,7 @@ function startNew() {
     canvas: { url: "", notes: "" },
     policies: [],
 
-    // NEW: defaults for section toggles
+    // defaults for section toggles
     includeTextbooks: true,
     includeAssignments: true,
     includeHours: true,
@@ -146,7 +142,6 @@ function startNew() {
     updatedAt: now(),
   };
 }
-
 
 function initOptions() {
   // Make instructor multi-select
@@ -162,30 +157,26 @@ function initOptions() {
   fillSelect(els.campusReqSelect, CAMPUS_REQUIREMENTS.map((o) => ({ value: o.id, label: o.label })), true);
 
   // Default picks
-  if (els.canvasSelect && els.canvasSelect.options.length) {
-    els.canvasSelect.value = els.canvasSelect.options[0].value;
-  }
-  if (els.campusReqSelect && els.campusReqSelect.options.length) {
-    els.campusReqSelect.value = els.campusReqSelect.options[0].value;
-  }
+  if (els.canvasSelect?.options.length) els.canvasSelect.value = els.canvasSelect.options[0].value;
+  if (els.campusReqSelect?.options.length) els.campusReqSelect.value = els.campusReqSelect.options[0].value;
 
   // Program change should reset course then re-derive content
-  els.program.addEventListener("change", () => {
+  els.program?.addEventListener("change", () => {
     fillCourseOptions();
-    els.course.value = els.course.options[0]?.value || "";
+    if (els.course?.options.length) els.course.value = els.course.options[0].value;
     updateFromInputs();
     render();
   });
-  [els.toggleTextbooks, els.toggleAssignments, els.toggleHours].forEach(cb => {
-  if (!cb) return;
-  cb.addEventListener("change", () => {
-    doc.includeTextbooks = !!els.toggleTextbooks?.checked;
-    doc.includeAssignments = !!els.toggleAssignments?.checked;
-    doc.includeHours = !!els.toggleHours?.checked;
-    render();
-  });
-});
 
+  // Toggle visibility for optional sections
+  [els.toggleTextbooks, els.toggleAssignments, els.toggleHours].forEach(cb => {
+    cb?.addEventListener("change", () => {
+      doc.includeTextbooks = !!els.toggleTextbooks?.checked;
+      doc.includeAssignments = !!els.toggleAssignments?.checked;
+      doc.includeHours = !!els.toggleHours?.checked;
+      render();
+    });
+  });
 }
 
 function fillSelect(select, options, includeEmpty = false) {
@@ -197,13 +188,13 @@ function fillSelect(select, options, includeEmpty = false) {
 }
 
 function fillCourseOptions() {
-  const list = COURSES[els.program.value] || [];
+  const list = COURSES[els.program?.value] || [];
   fillSelect(els.course, list.map((v) => ({ value: v, label: v })));
 }
 
 function updateFromInputs() {
-  doc.program = els.program.value;
-  doc.course = els.course.value;
+  doc.program = els.program?.value || "";
+  doc.course = els.course?.value || "";
 
   // Populate content from course map
   const cc = COURSE_CONTENT[doc.course] || {};
@@ -222,39 +213,30 @@ function updateFromInputs() {
   const cv = CANVAS_OPTIONS.find((c) => c.id === els.canvasSelect?.value);
   doc.canvas = cv ? { url: cv.url, notes: cv.notes || "" } : { url: "", notes: "" };
 
-  // Campus Requirements override if user explicitly picked a preset from the dropdown
+  // Campus Requirements override if user explicitly picked a preset
   const cr = CAMPUS_REQUIREMENTS.find((c) => c.id === els.campusReqSelect?.value);
-  if (cr && cr.body) {
-    // Respect your “HTML allowed for campus req”
-    doc.campusRequirements = cr.body;
-  }
+  if (cr?.body) doc.campusRequirements = cr.body;
 
   doc.updatedAt = now();
 }
 
 function render() {
-// Pill title: CODE - Name (# Credits)
-const code = doc.course || "COURSE";
-const cc = COURSE_CONTENT[doc.course] || {};
-const name = cc.name || "";
-const creditsText = (cc.credits != null && cc.credits !== "")
-  ? `(${cc.credits} Credits)`  // e.g., (3 Credits)
-  : "";
-
-const pill = [code, name && `- ${name}`, creditsText]  // hyphen w/ spaces
-  .filter(Boolean)
-  .join(" ");
-
-els.pvTitle.textContent = pill;
-
+  // Pill title: CODE - Name (# Credits)
+  const code = doc.course || "COURSE";
+  const cc = COURSE_CONTENT[doc.course] || {};
+  const name = cc.name || "";
+  const creditsText = (cc.credits != null && cc.credits !== "")
+    ? `(${cc.credits} Credits)` // e.g., (3 Credits)
+    : "";
+  const pill = [code, name && `- ${name}`, creditsText].filter(Boolean).join(" ");
+  els.pvTitle.textContent = pill;
 
   // Subhead (Program only; Year removed)
   els.pvSubhead.textContent = `${doc.program || "Program"}`;
 
   // Body sections (plain text, escaped)
-setBodyOrPlaceholder(els.pvDesc, doc.description, "Auto-filled from course…");
-setBodyOrPlaceholder(els.pvOutline, doc.outline, "Auto-filled from course…");
-
+  setBodyOrPlaceholder(els.pvDesc, doc.description, "Auto-filled from course…");
+  setBodyOrPlaceholder(els.pvOutline, doc.outline, "Auto-filled from course…");
   setBodyOrPlaceholder(els.pvTextbooks, doc.textbooks, "Select a set…");
   setBodyOrPlaceholder(els.pvAssign, doc.assignments, "Select a set…");
   setBodyOrPlaceholder(els.pvHours, doc.hours, "Select from list…");
@@ -283,18 +265,19 @@ setBodyOrPlaceholder(els.pvOutline, doc.outline, "Auto-filled from course…");
   els.pvCampus.classList.toggle("placeholder", !doc.campusRequirements);
   els.pvCampus.innerHTML = doc.campusRequirements || "Select from list…";
 
-  if (els.toggleTextbooks) els.toggleTextbooks.checked = !!doc.includeTextbooks;
-if (els.toggleAssignments) els.toggleAssignments.checked = !!doc.includeAssignments;
-if (els.toggleHours) els.toggleHours.checked = !!doc.includeHours;
+  // Sync toggles
+  if (els.toggleTextbooks)   els.toggleTextbooks.checked   = !!doc.includeTextbooks;
+  if (els.toggleAssignments) els.toggleAssignments.checked = !!doc.includeAssignments;
+  if (els.toggleHours)       els.toggleHours.checked       = !!doc.includeHours;
 
-const secTextbooks = els.pvTextbooks?.closest(".section");
-const secAssign     = els.pvAssign?.closest(".section");
-const secHours      = els.pvHours?.closest(".section");
+  // Hide/show sections
+  const secTextbooks = els.pvTextbooks?.closest(".section");
+  const secAssign    = els.pvAssign?.closest(".section");
+  const secHours     = els.pvHours?.closest(".section");
 
-if (secTextbooks) secTextbooks.style.display = doc.includeTextbooks ? "" : "none";
-if (secAssign)    secAssign.style.display    = doc.includeAssignments ? "" : "none";
-if (secHours)     secHours.style.display     = doc.includeHours ? "" : "none";
-
+  if (secTextbooks) secTextbooks.style.display = doc.includeTextbooks ? "" : "none";
+  if (secAssign)    secAssign.style.display    = doc.includeAssignments ? "" : "none";
+  if (secHours)     secHours.style.display     = doc.includeHours ? "" : "none";
 }
 
 /* ----- Policies: editable list with reorder ----- */
@@ -369,9 +352,8 @@ function setBodyOrPlaceholder(el, text, ph) {
   el.innerHTML = text ? newlineToBr(escapeHtml(text)) : ph;
 }
 function escapeHtml(str = "") {
-  return str.replace(/[&<>\"']/g, (s) => ({ "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;" }[s]));
+  return str.replace(/[&<>\"']/g, (s) => ({ "&":"&amp;","<":"&lt;","&gt;":"&gt;","\"":"&quot;","'":"&#39;" }[s]));
 }
 function newlineToBr(str = "") {
   return str.replace(/\n/g, "<br>");
 }
-
