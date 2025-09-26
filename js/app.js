@@ -1,13 +1,7 @@
 import { LocalDB } from "./storage/local.js";
 import { exportPDF } from "./../js/export-pdf.js";
-import { YEARS } from "./data/years.js";
 import { PROGRAMS } from "./data/programs.js";
 import { COURSES } from "./data/courses.js";
-import { DESCRIPTION_OPTIONS } from "./data/descriptions.js";
-import { OUTLINE_OPTIONS } from "./data/outlines.js";
-import { TEXTBOOK_SETS } from "./data/textbook_sets.js";
-import { ASSIGNMENT_SETS } from "./data/assignment_sets.js";
-import { HOURS_SETS } from "./data/hours_sets.js";
 import { INSTRUCTORS } from "./data/instructors.js";
 import { CANVAS_OPTIONS } from "./data/canvas_options.js";
 import { POLICY_PRESETS } from "./data/policy_presets.js";
@@ -56,9 +50,29 @@ pvPolicies: document.getElementById("pvPolicies"),
 pvCampus: document.getElementById("pvCampus"),
 };
 
-let doc = startNew();
-initOptions();
-render();
+function startNew(){
+  const firstProgram = PROGRAMS[0] || "";
+  const firstCourse = (COURSES[firstProgram] || [])[0] || "";
+  const cc = COURSE_CONTENT[firstCourse] || {};
+
+  return {
+    id: uid(),
+    program: firstProgram,
+    course: firstCourse,
+    title: "",                             // we don't show it any more
+    description: cc.description || "",
+    outline: cc.outline || "",
+    textbooks: cc.textbooks || "",
+    assignments: cc.assignments || "",
+    hours: cc.hours || "",
+    instructors: [],                       // <-- array of instructor objects
+    canvas: { url: "", notes: "" },
+    policies: [],                          // array of {id,title,body}
+    campusRequirements: cc.campusRequirements || "",
+    updatedAt: now(),
+  };
+}
+
 
 els.newBtn.addEventListener("click", ()=>{ doc = startNew(); render(); });
 els.saveBtn.addEventListener("click", async()=>{ await LocalDB.upsert(doc); alert("Saved."); });
@@ -123,35 +137,57 @@ select.innerHTML = (includeEmpty? `<option value="">Select…</option>` : "") + 
 if(!includeEmpty && options[0]) select.value = options[0].value;
 }
 
-els.program.addEventListener("change", ()=>{ fillCourseOptions(); updateFromInputs(); render(); });
+els.program.addEventListener("change", () => {
+  fillCourseOptions();
+  // pick first course in that program
+  els.course.value = els.course.options[0]?.value || "";
+  updateFromInputs();
+  render();
+});
+
 function fillCourseOptions(){ const list = COURSES[els.program.value]||[]; fillSelect(els.course, list.map(v=>({value:v,label:v}))); }
 
 function updateFromInputs(){
-doc.year = els.year.value; doc.program = els.program.value; doc.course = els.course.value;
-doc.title = els.title.value || doc.course;
-// Map selects to bodies
-doc.description = (DESCRIPTION_OPTIONS.find(o=>o.id===els.descriptionSelect.value)?.body)||"";
-doc.outline = (OUTLINE_OPTIONS.find(o=>o.id===els.outlineSelect.value)?.body)||"";
-doc.textbooks = (TEXTBOOK_SETS.find(o=>o.id===els.textbooksSelect.value)?.body)||"";
-doc.assignments = (ASSIGNMENT_SETS.find(o=>o.id===els.assignmentsSelect.value)?.body)||"";
-doc.hours = (HOURS_SETS.find(o=>o.id===els.hoursSelect.value)?.body)||"";
-// Instructor bulk populate
-const inst = INSTRUCTORS.find(i=>i.id===els.instructorSelect.value);
-if(inst){ doc.instructor = { name:inst.name, email:inst.email, office:inst.office, phone:inst.phone||"" }; }
-// Canvas bulk populate
-const cv = CANVAS_OPTIONS.find(c=>c.id===els.canvasSelect.value);
-if(cv){ doc.canvas = { url:cv.url, notes:cv.notes||"" }; }
-// Campus req
-const cr = CAMPUS_REQUIREMENTS.find(c=>c.id===els.campusReqSelect.value);
-doc.campusRequirements = cr? cr.body: "";
-doc.updatedAt = now();
+  doc.program = els.program.value;
+  doc.course = els.course.value;
+
+  // Populate content from COURSE_CONTENT
+  const cc = COURSE_CONTENT[doc.course] || {};
+  doc.description = cc.description || "";
+  doc.outline = cc.outline || "";
+  doc.textbooks = cc.textbooks || "";
+  doc.assignments = cc.assignments || "";
+  doc.hours = cc.hours || "";
+  doc.campusRequirements = cc.campusRequirements || "";
+
+  // Multiple instructors
+  const selectedIds = Array.from(els.instructorSelect.selectedOptions).map(o => o.value);
+  doc.instructors = INSTRUCTORS.filter(i => selectedIds.includes(i.id));
+
+  // Canvas (still from list, single)
+  const cv = CANVAS_OPTIONS.find(c => c.id === els.canvasSelect.value);
+  doc.canvas = cv ? { url: cv.url, notes: cv.notes || "" } : { url: "", notes: "" };
+
+  doc.updatedAt = now();
 }
 
 function render(){
 // header block
 const title = doc.title || doc.course || "Course Title";
 els.pvTitle.textContent = title;
-els.pvSubhead.textContent = `${doc.program||"Program"} • ${doc.year||"Year"}`;
+// Subhead: Program only
+els.pvSubhead.textContent = `${doc.program || "Program"}`;
+
+// Instructors list (name/email/office/phone per instructor)
+els.pvInstr.innerHTML = (doc.instructors.length ? doc.instructors : [])
+  .map(inst => `
+    <div><strong>${escapeHtml(inst.name)}</strong></div>
+    <div>${escapeHtml(inst.email)}</div>
+    <div>${escapeHtml(inst.office)}</div>
+    ${inst.phone ? `<div>${escapeHtml(inst.phone)}</div>` : ""}
+    <div style="height:8px"></div>
+  `).join("");
+
 setBodyOrPlaceholder(els.pvDesc, doc.description, "Select a description…");
 setBodyOrPlaceholder(els.pvOutline, doc.outline, "Select an outline…");
 setBodyOrPlaceholder(els.pvTextbooks, doc.textbooks, "Select a set…");
@@ -170,6 +206,12 @@ renderPoliciesEditor();
 renderPoliciesPreview();
 // campus requirements
 setBodyOrPlaceholder(els.pvCampus, doc.campusRequirements, "Select from list…");
+}
+
+function initOptions(){
+  // ...your existing fills...
+  // make instructor multi-select
+  els.instructorSelect.multiple = true;
 }
 
 // Policy edit list with reorder (drag + up/down)

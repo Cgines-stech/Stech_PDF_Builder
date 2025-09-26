@@ -127,3 +127,17 @@ label:has(#title) {
   background-size: contain;
   margin-bottom: 12px;
 }
+
+/* Hide the Year selector row */
+label:has(#year) { display: none !important; }
+
+/* Hide the old single-instructor readonly fields block */
+.grid2.tight label:has(#instrName),
+.grid2.tight label:has(#instrEmail),
+.grid2.tight label:has(#instrOffice),
+.grid2.tight label:has(#instrPhone) {
+  display: none !important;
+}
+
+/* Optional: subhead now only shows Program */
+.subhead { margin-top: 12px; }

@@ -1,5 +1,5 @@
 export const POLICY_PRESETS = [
-{ title:"Attendance", body:"" },
-{ title:"Late Work", body:"" },
-{ title:"Academic Integrity", body:"" },
+{ title:"Attendance", body:"Testing Attendance" },
+{ title:"Late Work", body:"Testing Late Work" },
+{ title:"Academic Integrity", body:"Testing Academic Integrity" },
 ];
