@@ -156,7 +156,10 @@ setBodyOrPlaceholder(els.pvDesc, doc.description, "Select a description…");
 setBodyOrPlaceholder(els.pvOutline, doc.outline, "Select an outline…");
 setBodyOrPlaceholder(els.pvTextbooks, doc.textbooks, "Select a set…");
 setBodyOrPlaceholder(els.pvAssign, doc.assignments, "Select a set…");
-setBodyOrPlaceholder(els.pvHours, doc.hours, "Select from list…");
+// Campus Requirements — allow HTML (links, formatting)
+els.pvCampus.classList.toggle("placeholder", !doc.campusRequirements);
+els.pvCampus.innerHTML = doc.campusRequirements || "Select from list…";
+
 // instructor preview
 els.instrName.value = doc.instructor.name||""; els.instrEmail.value = doc.instructor.email||""; els.instrOffice.value = doc.instructor.office||""; els.instrPhone.value = doc.instructor.phone||"";
 els.pvInstr.innerHTML = [doc.instructor.name, doc.instructor.email, doc.instructor.office, doc.instructor.phone].filter(Boolean).map(x=>`<div>${escapeHtml(x)}</div>`).join("");
