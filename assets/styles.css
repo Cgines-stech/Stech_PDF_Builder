@@ -1,221 +1,152 @@
-/* assets/styles.css */
+/* ===============================
+   Syllabus Builder — print-perfect CSS
+   =============================== */
 :root{
---bg:#f7f7f8;--card:#fff;--muted:#6b7280;--border:#e5e7eb;--text:#111827;--accent:#007cbc;
-}
-*{box-sizing:border-box;font-family:ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial}
-body{margin:0;background:var(--bg);color:var(--text)}
-.container{max-width:1200px;margin:0 auto;padding:16px}
-.header{display:flex;align-items:center;justify-content:space-between}
-.controls button{margin-left:8px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-@media(max-width:900px){.grid{grid-template-columns:1fr}}
-.panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px}
-label{display:block;margin-bottom:10px;font-size:14px}
-input,select,textarea{width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;margin-top:6px}
-button{padding:10px 14px;border:1px solid var(--border);background:#fff;border-radius:10px;cursor:pointer}
-button.secondary{background:#f3f4f6}
-
-
-/* PREVIEW CARD (what becomes the PDF) */
-.preview{background:#fff;border:1px solid var(--border);border-radius:16px;padding:24px;position:relative}
-
-
-/* Header image (banner logo) */
-.preview::before{content:"";display:block;width:100%;height:80px;background:url('../assets/header.png') no-repeat center center;background-size:contain;margin-bottom:12px}
-
-
-/* Full-width header bar with centered text box (inspired by styles5.css) */
-.titleBlock{position:relative;margin:0 0 16px 0;padding:0}
-.titleBlock::before{content:"";display:block;width:100%;height:45px;background:linear-gradient(to bottom, var(--accent) 48%, #ffffff 48%, #ffffff 52%, var(--accent) 52%, var(--accent) 100%);border-radius:10px}
-.courseTitle{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:#fff;color:#000;padding:4px 18px;border-radius:14px;font-weight:700;font-size:18px;white-space:nowrap}
-.subhead{color:var(--muted);font-size:13px;margin-top:54px;text-align:center}
-
-
-.section{margin:12px 0}
-.placeholder{color:var(--muted)}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.grid2.tight label{margin-bottom:6px}
-hr{border:none;border-top:1px solid var(--border);margin:16px 0}
-.vspace > div{margin-bottom:8px}
-.hint{font-size:12px;color:var(--muted);margin:-4px 0 8px}
-.flex.gap{display:flex;gap:8px;align-items:center}
-.policyList{list-style:none;padding:0;margin:8px 0;border:1px dashed var(--border);border-radius:12px}
-.policyList li{display:flex;align-items:flex-start;gap:8px;padding:8px;border-bottom:1px solid var(--border);background:#fff}
-.policyList li:last-child{border-bottom:none}
-.policyList .title{font-weight:600}
-.iconBtn{border:none;background:#f3f4f6;border-radius:8px;padding:6px 8px}
-.drag{cursor:grab}
-
-
-/* Two-column layout for Assignments block, with disclaimer */
-#pvAssign{column-count:2;column-gap:30px}
-#pvAssign::after{content:"Subject to change. Please consult your Canvas course for the most current instructions and updates.";display:block;font-style:italic;font-size:12px;color:#333;border-top:1px solid #ccc;margin-top:8px;padding-top:6px;break-inside:avoid}
-#pvAssign > *{break-inside:avoid}
-
-
-/* Print-like typography (affects screen preview too so PDF matches) */
-.preview h3{font-family:"Roboto Condensed", ui-sans-serif, system-ui; color: var(--accent); font-size:18px; margin:12px 0 6px}
-.preview, .preview div, .preview p{font-size:13px}
-
-/* --- Make preview full-width and below the selectors --- */
-.grid {
-  /* one column layout so both panels stack and the preview spans full width */
-  grid-template-columns: 1fr !important;
-}
-.grid > .panel {
-  width: 100%;
-}
-
-/* --- Hide the Course Title field (label + input) without HTML changes --- */
-label:has(#title) {
-  display: none !important;
-}
-
-/* --- Title bar styling (blue bars + white pill with course text) --- */
-.titleBlock {
-  position: relative;
-  margin: 0 0 16px 0;
-  padding: 0;
-}
-.titleBlock::before {
-  content: "";
-  display: block;
-  width: 100%;
-  height: 36px; /* thickness of the blue bars */
-  background: linear-gradient(
-    to bottom,
-    #007cbc 48%,
-    #ffffff 48%,
-    #ffffff 52%,
-    #007cbc 52%,
-    #007cbc 100%
-  );
-  border-radius: 6px;
-}
-
-/* The white pill that holds the Course text */
-.courseTitle {
-  position: absolute;
-  left: 50%;
-  top: 18px;                   /* half of ::before height */
-  transform: translate(-50%, -50%);
-  background: #fff;
-  color: #000;
-  padding: 4px 16px;
-  border-radius: 9999px;       /* fully rounded ends */
-  font-weight: 700;
-  font-size: 16px;
-  white-space: nowrap;
-  box-shadow: 0 0 0 2px #fff;  /* clean edge over the blue bar */
-}
-
-/* Subhead remains centered under the bars */
-.subhead {
-  color: var(--muted);
-  font-size: 13px;
-  margin-top: 40px;            /* pushes below the blue bar area */
-  text-align: center;
-}
-
-/* Keep your header image above everything if you use it */
-.preview::before {
-  content: "";
-  display: block;
-  width: 100%;
-  height: 80px;
-  background: url('../assets/header.png') no-repeat center center;
-  background-size: contain;
-  margin-bottom: 12px;
-}
-
-/* Hide the Year selector row */
-label:has(#year) { display: none !important; }
-
-/* Hide the old single-instructor readonly fields block */
-.grid2.tight label:has(#instrName),
-.grid2.tight label:has(#instrEmail),
-.grid2.tight label:has(#instrOffice),
-.grid2.tight label:has(#instrPhone) {
-  display: none !important;
-}
-
-/* Optional: subhead now only shows Program */
-.subhead { margin-top: 12px; }
-
-/* Hide controls that are auto-derived from Course */
-label:has(#descriptionSelect),
-label:has(#outlineSelect),
-label:has(#year),          /* if still present */
-label:has(#title) {        /* if you’re hiding Course Title too */
-  display: none !important;
-}
-
-/* ===== Letter-sized preview & consistent margins ===== */
-:root {
+  /* Letter page + margins (used for both screen simulation and @page) */
   --page-w: 8.5in;
   --page-h: 11in;
-  --page-margin: 0.5in; /* same as print margins below */
+  --page-margin: 0.5in;
+
+  /* Theme */
+  --bg:#f7f7f8; --card:#fff; --muted:#6b7280; --border:#e5e7eb; --text:#111827; --accent:#007cbc;
 }
 
-/* Simulate Letter page on screen */
-.preview {
+*{ box-sizing:border-box; font-family: ui-sans-serif, system-ui, Segoe UI, Roboto, Helvetica, Arial; }
+body{ margin:0; background:var(--bg); color:var(--text); }
+
+/* ===== App chrome (screen only) ===== */
+.container{ max-width:1200px; margin:0 auto; padding:16px; }
+.header{ display:flex; align-items:center; justify-content:space-between; }
+.controls button{ margin-left:8px; }
+.grid{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+@media(max-width:900px){ .grid{ grid-template-columns:1fr } }
+.panel{ background:var(--card); border:1px solid var(--border); border-radius:16px; padding:16px; }
+label{ display:block; margin-bottom:10px; font-size:14px; }
+input,select,textarea{ width:100%; padding:10px; border:1px solid var(--border); border-radius:10px; margin-top:6px; }
+button{ padding:10px 14px; border:1px solid var(--border); background:#fff; border-radius:10px; cursor:pointer; }
+button.secondary{ background:#f3f4f6; }
+
+/* ===== Letter-sized preview on screen ===== */
+.preview{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:16px;
+  position:relative;
+
+  /* Simulate printable page area on screen */
   width: calc(var(--page-w) - 2 * var(--page-margin));
   min-height: calc(var(--page-h) - 2 * var(--page-margin));
-  margin: 0 auto;             /* center on screen */
-  padding: var(--page-margin); /* match print margins */
-  border-radius: 8px;
+  margin: 0 auto;
+  padding: var(--page-margin);
   box-shadow: 0 2px 12px rgba(0,0,0,.05);
 }
 
-/* Actual print setup */
-@media print {
-  @page {
-    size: 8.5in 11in;          /* Letter */
-    margin: var(--page-margin);
+/* Header image (banner logo on first page) */
+.preview::before{
+  content:"";
+  display:block;
+  width:100%; height:80px;
+  background:url('../assets/header.png') no-repeat center center;
+  background-size:contain;
+  margin-bottom:12px;
+}
+
+/* Blue bars with pill title */
+.titleBlock{ position:relative; margin:0 0 16px 0; padding:0; }
+.titleBlock::before{
+  content:"";
+  display:block; width:100%; height:36px;
+  background:linear-gradient(to bottom, var(--accent) 48%, #ffffff 48%, #ffffff 52%, var(--accent) 52%, var(--accent) 100%);
+  border-radius:6px;
+}
+.courseTitle{
+  position:absolute; left:50%; top:18px; transform:translate(-50%,-50%);
+  background:#fff; color:#000; padding:4px 16px; border-radius:9999px;
+  font-weight:700; font-size:16px; white-space:nowrap; box-shadow:0 0 0 2px #fff;
+}
+.subhead{ color:var(--muted); font-size:13px; margin-top:12px; text-align:center; }
+
+/* Sections */
+.section{ margin:12px 0; }
+.placeholder{ color:var(--muted); }
+.grid2{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.grid2.tight label{ margin-bottom:6px; }
+hr{ border:none; border-top:1px solid var(--border); margin:16px 0; }
+.vspace > div{ margin-bottom:8px; }
+.hint{ font-size:12px; color:var(--muted); margin:-4px 0 8px; }
+.flex.gap{ display:flex; gap:8px; align-items:center; }
+.policyList{ list-style:none; padding:0; margin:8px 0; border:1px dashed var(--border); border-radius:12px; }
+.policyList li{ display:flex; align-items:flex-start; gap:8px; padding:8px; border-bottom:1px solid var(--border); background:#fff; }
+.policyList li:last-child{ border-bottom:none; }
+.policyList .title{ font-weight:600; }
+.iconBtn{ border:none; background:#f3f4f6; border-radius:8px; padding:6px 8px; }
+.drag{ cursor:grab; }
+
+/* Typography inside preview */
+.preview h3{ font-family:"Roboto Condensed", ui-sans-serif, system-ui; color:var(--accent); font-size:18px; margin:12px 0 6px; }
+.preview, .preview div, .preview p{ font-size:13px; }
+
+/* ===== Make preview full-width below selectors ===== */
+.grid{ grid-template-columns:1fr !important; }
+.grid > .panel{ width:100%; }
+
+/* Hide UI fields we no longer use */
+label:has(#title), label:has(#year),
+label:has(#descriptionSelect), label:has(#outlineSelect){
+  display:none !important;
+}
+/* Hide legacy instructor readonly inputs (we now show list) */
+.grid2.tight label:has(#instrName),
+.grid2.tight label:has(#instrEmail),
+.grid2.tight label:has(#instrOffice),
+.grid2.tight label:has(#instrPhone){
+  display:none !important;
+}
+
+/* ===== Assignments two-column + disclaimer ===== */
+#pvAssign{ column-count:2; column-gap:30px; }
+#pvAssign > *{ break-inside:avoid; page-break-inside:avoid; }
+#pvAssign::after{
+  content:"Subject to change. Please consult your Canvas course for the most current instructions and updates.";
+  display:block; font-style:italic; font-size:12px; color:#333;
+  border-top:1px solid #ccc; margin-top:8px; padding-top:6px;
+  break-inside:avoid; page-break-inside:avoid;
+}
+
+/* ===== Print: actual pagination & cleanup ===== */
+@media print{
+  @page{ size: 8.5in 11in; margin: var(--page-margin); }
+
+  /* Hide app chrome; print only the preview */
+  body{ background:#fff; }
+  .container, .grid, .panel{ border:none; box-shadow:none; }
+  header.container, .controls, .previewActions{ display:none !important; }
+
+  /* The preview becomes the printable content without extra padding/borders */
+  .preview{
+    width:auto; min-height:auto; margin:0; padding:0; border:none; box-shadow:none;
   }
-  /* Remove preview chrome when printing */
-  .panel, .container, .grid { border: 0; box-shadow: none; }
-  .preview { border: 0; box-shadow: none; padding: 0; }
-}
 
-/* ===== Force page breaks for specific sections ===== */
-/* Start Assignments on a new page */
-.section:has(#pvAssign) {
-  break-before: page;          /* modern property */
-  page-break-before: always;   /* legacy fallback */
-}
+  /* Enforce page breaks */
+  .section:has(#pvAssign){
+    break-before: page;
+    page-break-before: always;
+  }
+  .section:has(#pvHours){
+    break-before: page;
+    page-break-before: always;
+  }
 
-/* Start Classroom Hours on its own new page (after assignments) */
-.section:has(#pvHours) {
-  break-before: page;
-  page-break-before: always;
-}
-
-/* Keep the Assignments items together nicely across pages */
-#pvAssign { column-count: 2; column-gap: 30px; }
-#pvAssign > * { break-inside: avoid; page-break-inside: avoid; }
-#pvAssign::after {
-  content: "Subject to change. Please consult your Canvas course for the most current instructions and updates.";
-  display: block;
-  font-style: italic;
-  font-size: 12px;
-  color: #333;
-  border-top: 1px solid #ccc;
-  margin-top: 8px;
-  padding-top: 6px;
-  break-inside: avoid;
-  page-break-inside: avoid;
+  /* Avoid awkward splits */
+  .section{ break-inside:avoid-page; page-break-inside:avoid; }
+  .grid2{ break-inside:avoid-page; page-break-inside:avoid; }
 }
 
 /* ===== Screen-only page break markers (visual aid) ===== */
-@media screen {
+@media screen{
   .section:has(#pvAssign)::before,
-  .section:has(#pvHours)::before {
-    content: "— Page break —";
-    display: block;
-    text-align: center;
-    font-size: 12px;
-    color: #6b7280;
-    margin: 12px 0;
+  .section:has(#pvHours)::before{
+    content:"— Page break —";
+    display:block; text-align:center; font-size:12px; color:var(--muted); margin:12px 0;
   }
 }
