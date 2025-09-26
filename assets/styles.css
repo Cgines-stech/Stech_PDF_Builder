@@ -1,5 +1,5 @@
 :root{
---bg:#f7f7f8;--card:#fff;--muted:#6b7280;--border:#e5e7eb;--text:#111827;
+--bg:#f7f7f8;--card:#fff;--muted:#6b7280;--border:#e5e7eb;--text:#111827;--accent:#2563eb;
 }
 *{box-sizing:border-box;font-family:ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial}
 body{margin:0;background:var(--bg);color:var(--text)}
@@ -20,5 +20,14 @@ button.secondary{background:#f3f4f6}
 .section{margin:10px 0}
 .placeholder{color:var(--muted)}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid2.tight label{margin-bottom:6px}
 hr{border:none;border-top:1px solid var(--border);margin:16px 0}
 .vspace > div{margin-bottom:8px}
+.hint{font-size:12px;color:var(--muted);margin:-4px 0 8px}
+.flex.gap{display:flex;gap:8px;align-items:center}
+.policyList{list-style:none;padding:0;margin:8px 0;border:1px dashed var(--border);border-radius:12px}
+.policyList li{display:flex;align-items:flex-start;gap:8px;padding:8px;border-bottom:1px solid var(--border);background:#fff}
+.policyList li:last-child{border-bottom:none}
+.policyList .title{font-weight:600}
+.iconBtn{border:none;background:#f3f4f6;border-radius:8px;padding:6px 8px}
+.drag{cursor:grab}

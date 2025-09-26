@@ -1,1 +1,0 @@
-export const DEFAULT_CANVAS = { url:"", notes:"" };

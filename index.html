@@ -30,32 +30,55 @@
 <label>Course Title<input id="title" placeholder="Defaults to Course" /></label>
 
 
-<h2>Content</h2>
-<label>Course Description<textarea id="description" rows="4"></textarea></label>
-<label>Course Outline<textarea id="outline" rows="5"></textarea></label>
-<label>Textbooks & Materials<textarea id="textbooks" rows="4"></textarea></label>
-<label>Assignments & Assessments<textarea id="assignments" rows="5"></textarea></label>
-<label>Classroom Hours<input id="hours" placeholder="e.g., M/W 10:00–11:15 AM (3 credits)" /></label>
+<h2>Content (choose from lists)</h2>
+<label>Course Description<select id="descriptionSelect"></select></label>
+<label>Course Outline<select id="outlineSelect"></select></label>
+<label>Textbooks & Materials<select id="textbooksSelect"></select></label>
+<label>Assignments & Assessments<select id="assignmentsSelect"></select></label>
+<label>Classroom Hours<select id="hoursSelect"></select></label>
 
 
 <h2>Instructor & Canvas</h2>
-<label>Instructor Name<input id="instrName" /></label>
-<label>Instructor Email<input id="instrEmail" /></label>
-<label>Office Location<input id="instrOffice" /></label>
-<label>Phone (optional)<input id="instrPhone" /></label>
-<label>Canvas Course URL<input id="canvasUrl" placeholder="https://..." /></label>
-<label>Canvas Notes<textarea id="canvasNotes" rows="3"></textarea></label>
+<label>Instructor<select id="instructorSelect"></select></label>
+<div class="hint">Selecting an instructor fills Name, Email, Office, and Phone.</div>
+<div class="grid2 tight">
+<label>Name<input id="instrName" disabled /></label>
+<label>Email<input id="instrEmail" disabled /></label>
+<label>Office<input id="instrOffice" disabled /></label>
+<label>Phone<input id="instrPhone" disabled /></label>
+</div>
+<label>Canvas<select id="canvasSelect"></select></label>
 
 
 <h2>Policies</h2>
-<div id="policies"></div>
+<div class="hint">Add multiple and reorder with drag or arrows.</div>
+<div class="flex gap">
+<select id="policyPicker"></select>
 <button id="addPolicyBtn" class="secondary">Add Policy</button>
+</div>
+<ul id="policies" class="policyList" aria-label="Selected policies (reorderable)"></ul>
 
 
 <h2>Campus Requirements</h2>
-<textarea id="campusReq" rows="4"></textarea>
+<label>Institutional Statement<select id="campusReqSelect"></select></label>
 </section>
 
 
 <section class="panel">
+<div class="previewActions">
+<button id="exportBtnTop" class="secondary">Export PDF</button>
+</div>
+<div id="preview" class="preview">
+<!-- Live syllabus preview rendered here -->
+<div class="titleBlock">
+<div class="courseTitle" id="pvTitle">Course Title</div>
+<div class="subhead" id="pvSubhead">Program • Year</div>
+</div>
+<div class="section"><h3>Course Description</h3><div id="pvDesc" class="placeholder">Select a description…</div></div>
+<div class="section"><h3>Course Outline</h3><div id="pvOutline" class="placeholder">Select an outline…</div></div>
+<div class="section"><h3>Textbooks & Reading Materials</h3><div id="pvTextbooks" class="placeholder">Select a set…</div></div>
+<div class="section"><h3>Assignments & Assessments</h3><div id="pvAssign" class="placeholder">Select a set…</div></div>
+<div class="section"><h3>Classroom Hours</h3><div id="pvHours" class="placeholder">Select from list…</div></div>
+<hr />
+<div class="grid2">
 </html>
