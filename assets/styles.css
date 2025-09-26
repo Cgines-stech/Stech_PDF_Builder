@@ -141,3 +141,11 @@ label:has(#year) { display: none !important; }
 
 /* Optional: subhead now only shows Program */
 .subhead { margin-top: 12px; }
+
+/* Hide controls that are auto-derived from Course */
+label:has(#descriptionSelect),
+label:has(#outlineSelect),
+label:has(#year),          /* if still present */
+label:has(#title) {        /* if you’re hiding Course Title too */
+  display: none !important;
+}

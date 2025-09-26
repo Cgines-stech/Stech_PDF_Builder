@@ -230,8 +230,9 @@ function render() {
   els.pvSubhead.textContent = `${doc.program || "Program"}`;
 
   // Body sections (plain text, escaped)
-  setBodyOrPlaceholder(els.pvDesc, doc.description, "Select a description…");
-  setBodyOrPlaceholder(els.pvOutline, doc.outline, "Select an outline…");
+setBodyOrPlaceholder(els.pvDesc, doc.description, "Auto-filled from course…");
+setBodyOrPlaceholder(els.pvOutline, doc.outline, "Auto-filled from course…");
+
   setBodyOrPlaceholder(els.pvTextbooks, doc.textbooks, "Select a set…");
   setBodyOrPlaceholder(els.pvAssign, doc.assignments, "Select a set…");
   setBodyOrPlaceholder(els.pvHours, doc.hours, "Select from list…");
