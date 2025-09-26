@@ -56,3 +56,74 @@ hr{border:none;border-top:1px solid var(--border);margin:16px 0}
 /* Print-like typography (affects screen preview too so PDF matches) */
 .preview h3{font-family:"Roboto Condensed", ui-sans-serif, system-ui; color: var(--accent); font-size:18px; margin:12px 0 6px}
 .preview, .preview div, .preview p{font-size:13px}
+
+/* --- Make preview full-width and below the selectors --- */
+.grid {
+  /* one column layout so both panels stack and the preview spans full width */
+  grid-template-columns: 1fr !important;
+}
+.grid > .panel {
+  width: 100%;
+}
+
+/* --- Hide the Course Title field (label + input) without HTML changes --- */
+label:has(#title) {
+  display: none !important;
+}
+
+/* --- Title bar styling (blue bars + white pill with course text) --- */
+.titleBlock {
+  position: relative;
+  margin: 0 0 16px 0;
+  padding: 0;
+}
+.titleBlock::before {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 36px; /* thickness of the blue bars */
+  background: linear-gradient(
+    to bottom,
+    #007cbc 48%,
+    #ffffff 48%,
+    #ffffff 52%,
+    #007cbc 52%,
+    #007cbc 100%
+  );
+  border-radius: 6px;
+}
+
+/* The white pill that holds the Course text */
+.courseTitle {
+  position: absolute;
+  left: 50%;
+  top: 18px;                   /* half of ::before height */
+  transform: translate(-50%, -50%);
+  background: #fff;
+  color: #000;
+  padding: 4px 16px;
+  border-radius: 9999px;       /* fully rounded ends */
+  font-weight: 700;
+  font-size: 16px;
+  white-space: nowrap;
+  box-shadow: 0 0 0 2px #fff;  /* clean edge over the blue bar */
+}
+
+/* Subhead remains centered under the bars */
+.subhead {
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 40px;            /* pushes below the blue bar area */
+  text-align: center;
+}
+
+/* Keep your header image above everything if you use it */
+.preview::before {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 80px;
+  background: url('../assets/header.png') no-repeat center center;
+  background-size: contain;
+  margin-bottom: 12px;
+}
