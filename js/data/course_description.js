@@ -1,0 +1,1 @@
+export const DEFAULT_DESCRIPTION = ""; // seed campus-wide description templates here

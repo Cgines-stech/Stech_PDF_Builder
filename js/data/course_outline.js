@@ -1,0 +1,1 @@
+export const DEFAULT_OUTLINE = ""; // week-by-week outline presets
