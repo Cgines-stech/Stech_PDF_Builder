@@ -33,10 +33,14 @@ const els = {
   campusReqSelect: document.getElementById("campusReqSelect"),
 
   // buttons
-  newBtn: document.getElementById("newBtn"),
-  saveBtn: document.getElementById("saveBtn"),
-  exportBtn: document.getElementById("exportBtn"),
-  exportBtnTop: document.getElementById("exportBtnTop"),
+newBtn: document.getElementById("newBtn"),
+saveBtn: document.getElementById("saveBtn"),
+exportBtn: document.getElementById("exportBtn"),
+exportBtnTop: document.getElementById("exportBtnTop"),
+printBtn: document.getElementById("printBtn"),       // <-- add these
+printBtnTop: document.getElementById("printBtnTop"), // <-- add these
+
+
 
   //toggles
     toggleTextbooks: document.getElementById("toggleTextbooks"),
@@ -73,8 +77,14 @@ els.saveBtn.addEventListener("click", async () => {
 });
 
 // Export: filename should be just the course CODE (e.g., "ENG 1010.pdf")
-[els.exportBtn, els.exportBtnTop].forEach((b) =>
-  b.addEventListener("click", () => exportPDF(doc.course))
+// Export: filename should be just the course CODE (e.g., "ENG 1010.pdf")
+[els.exportBtn, els.exportBtnTop].forEach(b =>
+  b?.addEventListener("click", () => exportPDF(doc.course))
+);
+
+// Print buttons -> open browser print dialog (honors page breaks)
+[els.printBtn, els.printBtnTop].forEach(b =>
+  b?.addEventListener("click", () => window.print())
 );
 
 // Changes → update & render

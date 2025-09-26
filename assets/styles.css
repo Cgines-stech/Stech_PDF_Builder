@@ -150,3 +150,7 @@ label:has(#descriptionSelect), label:has(#outlineSelect){
     display:block; text-align:center; font-size:12px; color:var(--muted); margin:12px 0;
   }
 }
+
+@media print{
+  header.container, .controls, .previewActions{ display:none !important; }
+}
