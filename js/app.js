@@ -86,15 +86,20 @@ els.saveBtn.addEventListener("click", async () => {
 // Policies add
 document.getElementById("addPolicyBtn").addEventListener("click", () => {
   const id = els.policyPicker.value;
-  if (!id) return;
-  const preset = POLICY_PRESETS.find((p) => p.id === id);
-  if (!preset) return;
-  if (!doc.policies.some((p) => p.id === preset.id)) {
+  if (!id) return; // no selection
+
+  const preset = POLICY_PRESETS.find(p => p.id === id);
+  if (!preset) return; // safety check
+
+  // avoid duplicates
+  if (!doc.policies.some(p => p.id === preset.id)) {
     doc.policies.push(structuredClone(preset));
   }
+
   renderPoliciesEditor();
   renderPoliciesPreview();
 });
+
 
 
 /* ---------- Functions ---------- */
@@ -143,7 +148,7 @@ function initOptions() {
   // Instructors, canvas, policies, campus req
   fillSelect(els.instructorSelect, INSTRUCTORS.map((o) => ({ value: o.id, label: o.label })), true);
   fillSelect(els.canvasSelect, CANVAS_OPTIONS.map((o) => ({ value: o.id, label: o.label })), true);
-  fillSelect(els.policyPicker, POLICY_PRESETS.map((o) => ({ value: o.id, label: o.title })), true);
+  fillSelect(els.policyPicker, POLICY_PRESETS.map(o => ({ value: o.id, label: o.title })), true);
   fillSelect(els.campusReqSelect, CAMPUS_REQUIREMENTS.map((o) => ({ value: o.id, label: o.label })), true);
 
   // Default picks
