@@ -218,13 +218,20 @@ function updateFromInputs() {
 }
 
 function render() {
-  // Pill title: CODE – Name (Credits); filename stays CODE via exportPDF(doc.course)
-  const code = doc.course || "COURSE";
-  const cc = COURSE_CONTENT[doc.course] || {};
-  const name = cc.name || "";
-  const credits = (cc.credits != null && cc.credits !== "") ? `${cc.credits} cr` : "";
-  const pill = [code, name && `– ${name}`, credits && `(${credits})`].filter(Boolean).join(" ");
-  els.pvTitle.textContent = pill;
+// Pill title: CODE - Name (# Credits)
+const code = doc.course || "COURSE";
+const cc = COURSE_CONTENT[doc.course] || {};
+const name = cc.name || "";
+const creditsText = (cc.credits != null && cc.credits !== "")
+  ? `(${cc.credits} Credits)`  // e.g., (3 Credits)
+  : "";
+
+const pill = [code, name && `- ${name}`, creditsText]  // hyphen w/ spaces
+  .filter(Boolean)
+  .join(" ");
+
+els.pvTitle.textContent = pill;
+
 
   // Subhead (Program only; Year removed)
   els.pvSubhead.textContent = `${doc.program || "Program"}`;

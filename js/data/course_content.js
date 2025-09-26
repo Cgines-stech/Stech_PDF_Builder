@@ -1,3 +1,4 @@
+/* course_content.js */
 export const COURSE_CONTENT = {
   "ENG 1010": {
     name: "English Composition I",
