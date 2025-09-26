@@ -1,6 +1,14 @@
-export const POLICY_PRESETS = [
-{ id:"pol_attendance", title:"Attendance", body:"Students are expected to attend..." },
-{ id:"pol_late", title:"Late Work", body:"Late submissions incur..." },
-{ id:"pol_integrity", title:"Academic Integrity", body:"All students must adhere..." },
-{ id:"pol_access", title:"Accessibility", body:"Accommodations are available..." },
+export const CANVAS_OPTIONS = [
+  {
+    id: "canvas_it140_fall",
+    label: "IT 140 – Fall",
+    url: "https://canvas.stech.edu/courses/it140-fall",
+    notes: "All readings posted weekly."
+  },
+  {
+    id: "canvas_eng101_spring",
+    label: "ENG 101 – Spring",
+    url: "https://canvas.stech.edu/courses/eng101-spring",
+    notes: "Synchronous sessions on Mondays."
+  }
 ];
